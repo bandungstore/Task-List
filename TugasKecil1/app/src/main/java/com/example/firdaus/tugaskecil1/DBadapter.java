@@ -18,25 +18,40 @@ public class DBadapter {
     // Field Names:
     public static final String KEY_ROWID = "_id";
     public static final String KEY_TASK = "task";
+    public static final String KEY_DESKRIPSI = "deskripsi";
+    public static final String KEY_YEAR = "thn";
+    public static final String KEY_MONTH = "bln";
+    public static final String KEY_DAY = "day";
     //public static final String KEY_DATE = "date";
 
-    public static final String[] ALL_KEYS = new String[] {KEY_ROWID, KEY_TASK};
+    public static final String[] ALL_KEYS = new String[] {KEY_ROWID, KEY_TASK,KEY_DESKRIPSI,KEY_YEAR,KEY_MONTH,KEY_DAY};
 
     // Column Numbers for each Field Name:
     public static final int COL_ROWID = 0;
     public static final int COL_TASK = 1;
+    public static final int COL_Deskripsi = 2;
+    public static final int COL_Year = 3;
+    public static final int COL_Month = 4;
+    public static final int COL_Day = 5;
+
+
+
     // public static final int COL_DATE = 2;
 
     // Info database:
-    public static final String DATABASE_NAME = "DBLokasi";
-    public static final String DATABASE_TABLE = "Lokasi";
+    public static final String DATABASE_NAME = "DBTugas";
+    public static final String DATABASE_TABLE = "Tugas";
     public static final int DATABASE_VERSION = 1; // The version number must be incremented each time a change to DB structure occurs.
 
     //SQL untuk membuat database
     private static final String DATABASE_CREATE_SQL =
             "CREATE TABLE " + DATABASE_TABLE
                     + " (" + KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + KEY_TASK + " TEXT NOT NULL "
+                    + KEY_TASK + " TEXT NOT NULL, "
+                    + KEY_DESKRIPSI + " TEXT NOT NULL, "
+                    + KEY_YEAR + " INT NOT NULL, "
+                    + KEY_MONTH + " INT NOT NULL, "
+                    + KEY_DAY + " INT NOT NULL "
                     + ");";
 
     private final Context context;
@@ -60,13 +75,17 @@ public class DBadapter {
     }
 
     // Insert ke database.
-    public long insertRow(String place) {
-        ContentValues initialValues = new ContentValues();
-        initialValues.put(KEY_TASK, place);
+    public long insertRow(String place,String desk, int tahun, int bulan, int hari) {
+        ContentValues newValues = new ContentValues();
+        newValues.put(KEY_TASK, place);
+        newValues.put(KEY_DESKRIPSI, desk);
+        newValues.put(KEY_YEAR, tahun);
+        newValues.put(KEY_MONTH, bulan);
+        newValues.put(KEY_DAY, hari);
         //initialValues.put(KEY_DATE, date);
 
         // Menambah data ke database
-        return db.insert(DATABASE_TABLE, null, initialValues);
+        return db.insert(DATABASE_TABLE, null, newValues);
     }
 
     // Delete a row from the database, by rowId (primary key)
@@ -85,11 +104,18 @@ public class DBadapter {
         return c;
     }
 
+
+
     // Change an existing row to be equal to new data.
-    public boolean updateRow(long rowId, String task) {
+    public boolean updateRow(long rowId, String task,String desk, int tahun, int bulan, int hari) {
         String where = KEY_ROWID + "=" + rowId;
         ContentValues newValues = new ContentValues();
         newValues.put(KEY_TASK, task);
+        newValues.put(KEY_DESKRIPSI, desk);
+        newValues.put(KEY_YEAR, tahun);
+        newValues.put(KEY_MONTH, bulan);
+        newValues.put(KEY_DAY, hari);
+
         // Insert it into the database.
         return db.update(DATABASE_TABLE, newValues, where, null) != 0;
     }
